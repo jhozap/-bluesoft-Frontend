@@ -66,6 +66,7 @@ margin-top: -100px;"
             [placeholder]="'Seleccione...'"
             bindValue="id"
             bindLabel="nombre"
+            (change)="changeAutor($event)"
           >
           </ng-select>
         </div>
@@ -83,6 +84,7 @@ margin-top: -100px;"
             [placeholder]="'Seleccione...'"
             bindValue="id"
             bindLabel="nombre"
+            (change)="changeCategoria($event)"
           >
           </ng-select>
         </div>
@@ -112,15 +114,19 @@ margin-top: -100px;"
       <tr>
         <th scope="col">#</th>
         <th scope="col">Nombre</th>
-        <th scope="col">Descripcion</th>
+        <th scope="col">Id Autor</th>
+        <th scope="col">Id Categoria</th>
+        <th scope="col">ISBN</th>
         <th scope="col">Editar</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let libro of Libros">
-        <th scope="row">1</th>
+        <th scope="row">{{ libro.id }}</th>
         <td>{{ libro.nombreLibro }}</td>
         <td>{{ libro.idAutor }}</td>
+        <td>{{ libro.idCategoria }}</td>
+        <td>{{ libro.isbn }}</td>
         <td>
           <button
             type="button"

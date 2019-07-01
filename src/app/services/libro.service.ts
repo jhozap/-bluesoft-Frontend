@@ -24,14 +24,14 @@ export class LibroService {
   }
 
   postLibro(params: Libro) {
-    return this.http.post(Constants.pathService + `/Categorias`, params, { headers: this.generateBasicHEaders() });
+    return this.http.post(Constants.pathService + `/Libros`, params, { headers: this.generateBasicHEaders() });
   }
 
   putLibro(params: Libro) {
-    return this.http.put(Constants.pathService + `/Categorias/${params.id}`, params, { headers: this.generateBasicHEaders() });
+    return this.http.put(Constants.pathService + `/Libros/${params.id}`, params, { headers: this.generateBasicHEaders() });
   }
 
   deleteLibro(id: number) {
-    return this.http.delete(Constants.pathService + `/Categorias/${id}`, { headers: this.generateBasicHEaders() });
+    return this.http.delete(Constants.pathService + `/Libros/${id}`, { headers: this.generateBasicHEaders() });
   }
 }

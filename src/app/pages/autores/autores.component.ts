@@ -108,16 +108,13 @@ export class AutoresComponent implements OnInit {
         .subscribe(
           (data: Autor) => {
             if (data) {
-              if (data.id > 0) {
-                Swal.fire({
-                  title: 'Excelente!',
-                  text: 'Autor Actualizado Exitosamente',
-                  type: 'success',
-                  confirmButtonText: 'Ok'
-                });
-                this.getAutores();
-              }
-
+              Swal.fire({
+                title: 'Excelente!',
+                text: 'Autor Actualizado Exitosamente',
+                type: 'success',
+                confirmButtonText: 'Ok'
+              });
+              this.getAutores();
             } else {
               Swal.fire({
                 title: 'Error!',
@@ -210,7 +207,7 @@ export class AutoresComponent implements OnInit {
 
 
   limpiar() {
-
+    this.AutorEdit = new Autor();
   }
 
 }

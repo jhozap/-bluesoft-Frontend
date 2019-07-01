@@ -94,6 +94,81 @@ export class CategoriasComponent implements OnInit {
     }
   }
 
+  updateCategoria(categoria: Categoria) {
+    if (this.valida()) {
+      this.spinner.show();
+      this._CategoriaService.putCategoria(this.CategoriaEdit).pipe(
+        finalize(() => {
+          this.spinner.hide();
+        }))
+        .subscribe(
+          (data: Categoria) => {
+            if (data) {
+              Swal.fire({
+                title: 'Excelente!',
+                text: 'Categoria Actualizada Exitosamente',
+                type: 'success',
+                confirmButtonText: 'Ok'
+              });
+              this.getCategorias();
+            } else {
+              Swal.fire({
+                title: 'Error!',
+                text: 'no se retornaron datos',
+                type: 'error',
+                confirmButtonText: 'Ok'
+              });
+            }
+          }, (error: any) => {
+            Swal.fire({
+              title: 'Error!',
+              text: error.message,
+              type: 'error',
+              confirmButtonText: 'Ok'
+            });
+          }
+        );
+    }
+  }
+
+  deleteCategoria(categoria: Categoria) {
+    this.spinner.show();
+    this._CategoriaService.deleteCategoria(this.CategoriaEdit.id).pipe(
+      finalize(() => {
+        this.spinner.hide();
+      }))
+      .subscribe(
+        (data: Categoria) => {
+          if (data) {
+            if (data.id > 0) {
+              Swal.fire({
+                title: 'Excelente!',
+                text: 'Categoria eliminada Exitosamente',
+                type: 'success',
+                confirmButtonText: 'Ok'
+              });
+              this.getCategorias();
+            }
+
+          } else {
+            Swal.fire({
+              title: 'Error!',
+              text: 'no se retornaron datos',
+              type: 'error',
+              confirmButtonText: 'Ok'
+            });
+          }
+        }, (error: any) => {
+          Swal.fire({
+            title: 'Error!',
+            text: error.message,
+            type: 'error',
+            confirmButtonText: 'Ok'
+          });
+        }
+      );
+  }
+
   editarCategoria(categoria: Categoria) {
     this.CategoriaEdit = categoria;
   }

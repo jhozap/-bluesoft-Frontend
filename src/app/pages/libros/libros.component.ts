@@ -151,7 +151,45 @@ export class LibrosComponent implements OnInit {
   }
 
   nuevoLibro(libro: Libro) {
+    if (this.valida()) {
+      this.spinner.show();
+      this._LibroService.postLibro(this.LibroEdit).pipe(
+        finalize(() => {
+          this.spinner.hide();
+        }))
+        .subscribe(
+          (data: Autor) => {
+            if (data) {
+              if (data.id > 0) {
+                Swal.fire({
+                  title: 'Excelente!',
+                  text: 'Libro Creado Exitosamente',
+                  type: 'success',
+                  confirmButtonText: 'Ok'
+                });
+                this.getLibros();
+                this.getAutores();
+                this.getCategorias();
+              }
 
+            } else {
+              Swal.fire({
+                title: 'Error!',
+                text: 'no se retornaron datos',
+                type: 'error',
+                confirmButtonText: 'Ok'
+              });
+            }
+          }, (error: any) => {
+            Swal.fire({
+              title: 'Error!',
+              text: error.message,
+              type: 'error',
+              confirmButtonText: 'Ok'
+            });
+          }
+        );
+    }
   }
 
   updateLibro(libro: Libro) {
@@ -167,7 +205,7 @@ export class LibrosComponent implements OnInit {
               if (data.id > 0) {
                 Swal.fire({
                   title: 'Excelente!',
-                  text: 'Autor Actualizado Exitosamente',
+                  text: 'Libro Actualizado Exitosamente',
                   type: 'success',
                   confirmButtonText: 'Ok'
                 });
@@ -280,6 +318,14 @@ export class LibrosComponent implements OnInit {
       }
 
     return true;
+  }
+
+  changeCategoria(e: Categoria) {
+    this.LibroEdit.idCategoria = e.id;
+  }
+
+  changeAutor(e: Autor) {
+    this.LibroEdit.idAutor = e.id;
   }
 
 }
