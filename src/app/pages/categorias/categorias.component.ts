@@ -99,7 +99,7 @@ export class CategoriasComponent implements OnInit {
   }
 
   limpiar() {
-
+    this.CategoriaEdit = new Categoria();
   }
 
   valida(): boolean {

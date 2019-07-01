@@ -65,7 +65,7 @@ margin-top: -100px;"
             [(items)]="Autores"
             [placeholder]="'Seleccione...'"
             bindValue="id"
-            bindLabel="nameFull"
+            bindLabel="nombre"
           >
           </ng-select>
         </div>
@@ -133,4 +133,21 @@ margin-top: -100px;"
       </tr>
     </tbody>
   </table>
+  <!--Grid con Framework-->
+  <ag-grid-angular #GridProyecciones
+    style="width: 100%; height: 300px;"
+    class="ag-theme-balham"
+    [rowData]="rowData"
+    [columnDefs]="columnDefs"
+    [animateRows]="true"
+    [pagination]="true"
+    rowSelection="single"
+    [floatingFilter]="true"
+    [enableFilter]="true"
+    [localeText]="localeText"
+    [frameworkComponents]="frameworkComponents"
+    [paginationAutoPageSize]="true"
+    [rowHeight]="40"
+    >
+  </ag-grid-angular>
 </main>

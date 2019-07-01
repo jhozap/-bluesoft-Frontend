@@ -9,6 +9,7 @@ import { Autor } from 'src/app/model/autor.class';
 import { Categoria } from 'src/app/model/categoria.class';
 import { AutorService } from 'src/app/services/autor.service';
 import { CategoriaService } from 'src/app/services/categoria.service';
+import { Constants } from 'src/app/common/constants.class';
 
 @Component({
   selector: 'app-libros',
@@ -24,9 +25,20 @@ export class LibrosComponent implements OnInit {
   LibroEdit: Libro;
   AutorSelected: Autor;
   CategoriaSelected: Categoria;
+  localeText: any;
+  frameworkComponents: any;
   Libros: Array<Libro> = [];
   Autores: Array<Autor> = [];
   Categorias: Array<Categoria> = [];
+  rowData = [];
+
+  columnDefs = [
+    {headerName: 'Id', field: 'id' },
+    {headerName: 'Nombre', field: 'nombreLibro' },
+    {headerName: 'Id Autor', field: 'idAutor'},
+    {headerName: 'Id Autor', field: 'idCategoria'},
+    {headerName: 'ISBN', field: 'isbn'}
+];
 
   constructor(private spinner: NgxSpinnerService,
               public _LibroService: LibroService,
@@ -35,6 +47,7 @@ export class LibrosComponent implements OnInit {
               private config: NgSelectConfig) {
                 this.config.notFoundText = 'No se encontraron datos';
                 this.LibroEdit = new Libro();
+                this.localeText = Constants.localeText;
                }
 
   ngOnInit() {
@@ -56,6 +69,7 @@ export class LibrosComponent implements OnInit {
         (data: Libro[]) => {
           if (data) {
             this.Libros = data;
+            this.rowData = this.Libros;
             console.log(this.Libros);
           } else {
             Swal.fire({
@@ -141,11 +155,83 @@ export class LibrosComponent implements OnInit {
   }
 
   updateLibro(libro: Libro) {
+    if (this.valida()) {
+      this.spinner.show();
+      this._LibroService.putLibro(this.LibroEdit).pipe(
+        finalize(() => {
+          this.spinner.hide();
+        }))
+        .subscribe(
+          (data: Autor) => {
+            if (data) {
+              if (data.id > 0) {
+                Swal.fire({
+                  title: 'Excelente!',
+                  text: 'Autor Actualizado Exitosamente',
+                  type: 'success',
+                  confirmButtonText: 'Ok'
+                });
+                this.getAutores();
+              }
 
+            } else {
+              Swal.fire({
+                title: 'Error!',
+                text: 'no se retornaron datos',
+                type: 'error',
+                confirmButtonText: 'Ok'
+              });
+            }
+          }, (error: any) => {
+            Swal.fire({
+              title: 'Error!',
+              text: error.message,
+              type: 'error',
+              confirmButtonText: 'Ok'
+            });
+          }
+        );
+    }
   }
 
   deleteLibro(libro: Libro) {
+    this.spinner.show();
+    this._LibroService.deleteLibro(this.LibroEdit.id).pipe(
+      finalize(() => {
+        this.spinner.hide();
+      }))
+      .subscribe(
+        (data: Autor) => {
+          if (data) {
+            if (data.id > 0) {
+              Swal.fire({
+                title: 'Excelente!',
+                text: 'Libro eliminado Exitosamente',
+                type: 'success',
+                confirmButtonText: 'Ok'
+              });
+              this.getLibros();
+              this.getAutores();
+              this.getCategorias();
+            }
 
+          } else {
+            Swal.fire({
+              title: 'Error!',
+              text: 'no se retornaron datos',
+              type: 'error',
+              confirmButtonText: 'Ok'
+            });
+          }
+        }, (error: any) => {
+          Swal.fire({
+            title: 'Error!',
+            text: error.message,
+            type: 'error',
+            confirmButtonText: 'Ok'
+          });
+        }
+      );
   }
 
   editarLibro(libro: Libro) {
@@ -154,6 +240,46 @@ export class LibrosComponent implements OnInit {
 
   limpiar() {
     this.LibroEdit = new Libro();
+  }
+
+  valida(): boolean {
+    if (this.LibroEdit.nombreLibro === null || this.LibroEdit.nombreLibro === undefined ||
+                                              this.LibroEdit.nombreLibro === ' ') {
+      Swal.fire({
+        title: 'Error!',
+        text: 'El Nombre no puede estar vacio',
+        type: 'error',
+        confirmButtonText: 'Ok'
+      });
+      return false;
+    } else if (this.LibroEdit.idAutor === null || this.LibroEdit.idAutor === undefined ) {
+        Swal.fire({
+        title: 'Error!',
+        text: 'debe seleccionar un autor',
+        type: 'error',
+        confirmButtonText: 'Ok'
+        });
+        return false;
+      } else if (this.LibroEdit.idCategoria === null || this.LibroEdit.idCategoria === undefined ) {
+        Swal.fire({
+        title: 'Error!',
+        text: 'debe seleccionar una categoria',
+        type: 'error',
+        confirmButtonText: 'Ok'
+        });
+        return false;
+      } else if (this.LibroEdit.isbn === null || this.LibroEdit.isbn === undefined ||
+                                                      this.LibroEdit.isbn === ' ') {
+        Swal.fire({
+        title: 'Error!',
+        text: 'El ISBN no puede estar vacio',
+        type: 'error',
+        confirmButtonText: 'Ok'
+        });
+        return false;
+      }
+
+    return true;
   }
 
 }

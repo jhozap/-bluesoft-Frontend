@@ -21,10 +21,37 @@ export class AutoresComponent implements OnInit {
         }
 
   ngOnInit() {
+    this.getAutores();
   }
 
   getAutores() {
-
+    this.spinner.show();
+    this._AutorService.getAutores().pipe(
+      finalize(() => {
+        this.spinner.hide();
+      }))
+      .subscribe(
+        (data: Autor[]) => {
+          if (data) {
+            this.Autores = data;
+            console.log(this.Autores);
+          } else {
+            Swal.fire({
+              title: 'Error!',
+              text: 'no se retornaron datos',
+              type: 'error',
+              confirmButtonText: 'Cool'
+            });
+          }
+        }, (error: any) => {
+          Swal.fire({
+            title: 'Error!',
+            text: error.message,
+            type: 'error',
+            confirmButtonText: 'Cool'
+          });
+        }
+      );
   }
 
   nuevoAutor() {
@@ -68,6 +95,10 @@ export class AutoresComponent implements OnInit {
   }
 
   editarAutor(autor: Autor) {
+    this.AutorEdit = autor;
+  }
+
+  updateAutor(autor: Autor) {
     if (this.valida()) {
       this.spinner.show();
       this._AutorService.putAutor(this.AutorEdit).pipe(

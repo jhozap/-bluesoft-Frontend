@@ -11,7 +11,8 @@ import { AutoresComponent } from './pages/autores/autores.component';
 import { CategoriasComponent } from './pages/categorias/categorias.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { HttpClientModule } from '@angular/common/http';
-import { SearchComponent } from './pages/search/search.component';
+import { GridModule } from '@syncfusion/ej2-angular-grids';
+import { AgGridModule } from 'ag-grid-angular';
 
 
 @NgModule({
@@ -20,16 +21,17 @@ import { SearchComponent } from './pages/search/search.component';
     SidebarComponent,
     LibrosComponent,
     AutoresComponent,
-    CategoriasComponent,
-    SearchComponent
+    CategoriasComponent
   ],
   imports: [
     BrowserModule,
+    GridModule,
     NgSelectModule,
     HttpClientModule,
     FormsModule,
     NgxSpinnerModule,
-    AppRoutingModule
+    AppRoutingModule,
+    AgGridModule.withComponents([])
   ],
   providers: [],
   bootstrap: [AppComponent]
